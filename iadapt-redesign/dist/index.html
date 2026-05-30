@@ -5,8 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>iAdapt Research Center</title>
-    <script type="module" crossorigin src="assets/index-DBbeOeCD.js?v=2"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-B9gkzxjt.css?v=2">
+    <script id="iadapt-config" data-entry="assets/index-DBbeOeCD.js?v=3"></script>
+    <script>
+      (function () {
+        var entry = document.getElementById('iadapt-config').getAttribute('data-entry');
+        var assetPath = new URL(entry, location.href).pathname;
+        window.__IADAPT_BASENAME__ = assetPath.replace(/\/assets\/[^/]+$/, '') || '/';
+      })();
+    </script>
+    <script type="module" crossorigin src="assets/index-DBbeOeCD.js?v=3"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-B9gkzxjt.css?v=3">
     <style>
       /* ── 1. Reading Progress Bar ──────────────────────────────────── */
       #reading-progress {
@@ -198,7 +206,9 @@
             var href = a.getAttribute('href') || a.getAttribute('to') || '';
             // Normalize hrefs to explicit index.html files so static servers resolve correctly
             if (href === '/' || href === '' || href.indexOf('home') !== -1) {
-              a.setAttribute('href', '/');
+              var base = window.__IADAPT_BASENAME__ || '';
+              if (base === '/') base = '';
+              a.setAttribute('href', (base ? base + '/' : './'));
               a.textContent = 'Home';
             } else if (href.indexOf('about') !== -1) {
               a.setAttribute('href', 'about/index.html');

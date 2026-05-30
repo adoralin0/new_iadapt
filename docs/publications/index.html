@@ -234,6 +234,32 @@
             <li><a href="../news-events/index.html" class="nav-link">News &amp; Events</a></li>
             <li><a href="index.html" class="nav-link active">Publications</a></li>
             <li><a href="../team/index.html" class="nav-link">Our Team</a></li>
+          <script>
+            (function () {
+              var navContainer = document.querySelector('.nav-container');
+              if (!navContainer) return;
+              var navLinks = navContainer.querySelector('.nav-links');
+              if (!navLinks) return;
+              if (navContainer.querySelector('.nav-toggle')) return;
+              var toggle = document.createElement('button');
+              toggle.className = 'nav-toggle';
+              toggle.setAttribute('aria-expanded', 'false');
+              toggle.setAttribute('aria-label', 'Toggle navigation');
+              toggle.innerHTML = '☰ Menu';
+              navContainer.insertBefore(toggle, navLinks);
+              toggle.addEventListener('click', function () {
+                var isOpen = navLinks.classList.toggle('show');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+              });
+              navLinks.addEventListener('click', function (e) {
+                var target = e.target;
+                if (target && target.tagName === 'A') {
+                  navLinks.classList.remove('show');
+                  toggle.setAttribute('aria-expanded', 'false');
+                }
+              });
+            })();
+          </script>
           </ul>
         </div>
       </nav>
@@ -852,33 +878,6 @@
     </div>
   </footer>
 
-  <script src="../assets/nav-fix.js"></script>
-  <script>
-    (function () {
-      var navContainer = document.querySelector('.nav-container');
-      if (!navContainer) return;
-      var navLinks = navContainer.querySelector('.nav-links');
-      if (!navLinks) return;
-      if (navContainer.querySelector('.nav-toggle')) return;
-      var toggle = document.createElement('button');
-      toggle.className = 'nav-toggle';
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Toggle navigation');
-      toggle.innerHTML = '☰ Menu';
-      navContainer.insertBefore(toggle, navLinks);
-      toggle.addEventListener('click', function () {
-        var isOpen = navLinks.classList.toggle('show');
-        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-      navLinks.addEventListener('click', function (e) {
-        var target = e.target;
-        if (target && target.tagName === 'A') {
-          navLinks.classList.remove('show');
-          toggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-    })();
-  </script>
   <script>
     // ── Progress bar ───────────────────────────────────────────────
     (function () {

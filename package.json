@@ -1,0 +1,14 @@
+{
+  "name": "iadapt-redesign-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "start:auto": "node server.js",
+    "fetch:linkedin": "python scripts/fetch_linkedin.py",
+    "build:data": "npm run fetch:linkedin"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

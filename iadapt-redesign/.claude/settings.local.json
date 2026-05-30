@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx serve *)",
+      "Bash(start http://localhost:61664)",
+      "WebFetch(domain:dcp.ufl.edu)",
+      "Bash(start http://localhost:61664/publications/)"
+    ]
+  }
+}

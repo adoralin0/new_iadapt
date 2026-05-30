@@ -1,0 +1,25 @@
+{
+  "posts": [
+    {
+      "title": "Symbiotic Planning Theory: The CORE Framework for Human–AI Cocreation in Urban Planning",
+      "date": "2026-04-24",
+      "excerpt": "A new JAPA article by Zhong-Ren Peng and collaborators introduces the CORE framework for co-creation in urban planning.",
+      "link": "https://dcp.ufl.edu/iadapt/symbiotic-planning-theory-the-core-framework-for-human-ai-cocreation-in-urban-planning/",
+      "image": "/about-banner.jpg"
+    },
+    {
+      "title": "Assessment of Modeling Framework for Micromobility",
+      "date": "2024-06-16",
+      "excerpt": "Principal Investigator: Zhong-Ren Peng (University of Florida) — Project Manager: Thomas Hill.",
+      "link": "https://dcp.ufl.edu/iadapt/assessment-of-modeling-framework-for-micromobility/",
+      "image": "/micromobility.png"
+    },
+    {
+      "title": "Unveiling the Linkage between Climate Change and Miami-Area Condominium Collapse",
+      "date": "2022-03-12",
+      "excerpt": "By Yanghe Liu. Featured Image adapted from NY Post.",
+      "link": "https://dcp.ufl.edu/iadapt/unveiling-the-linkage-between-climate-change-and-miami-area-condominium-collapse/",
+      "image": "/miami-condo-collapse.jpg"
+    }
+  ]
+}

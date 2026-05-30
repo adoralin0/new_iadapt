@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publications — iAdapt Research Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/index-B9gkzxjt.css"/>
+  <style>
+    /* ── Progress Bar ─────────────────────────────────────────────── */
+    #reading-progress {
+      position: fixed; top: 0; left: 0;
+      width: 0%; height: 3px;
+      background: #FA4616;
+      z-index: 9999; pointer-events: none;
+      transition: width 0.08s linear;
+    }
+
+    /* ── Scroll entrance animations ───────────────────────────────── */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .animate-on-scroll.is-visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* ── Page Hero ────────────────────────────────────────────────── */
+    .pub-hero {
+      background-image: url('../about-banner.jpg');
+      background-size: cover;
+      background-position: center 35%;
+      min-height: 300px;
+    }
+    @media (min-width: 769px) { .pub-hero { background-attachment: fixed; } }
+    .pub-hero .hero-overlay {
+      background: linear-gradient(to right, rgba(0,33,165,0.9), rgba(0,33,165,0.45));
+    }
+    /* Match News & Events hero sizing */
+    .pub-hero .hero-title  { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+    .pub-hero .hero-subtitle { font-size: 1.25rem; max-width: 780px; line-height: 1.7; opacity: .95; }
+
+    /* ── Sticky Filter Bar ────────────────────────────────────────── */
+    .filter-bar {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 66px;          /* clears the ~66px sticky site-header */
+      z-index: 50;
+      padding: 0.85rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .filter-inner { display: flex; flex-direction: column; gap: 0.65rem; }
+
+    /* Category chips row — horizontal scroll on small screens */
+    .filter-chips {
+      display: flex; gap: 0.5rem;
+      overflow-x: auto; overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 6px;
+      touch-action: pan-x;
+      cursor: grab;
+      -webkit-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    .filter-chips.dragging { cursor: grabbing; }
+    .filter-chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      border: 2px solid #0021A5;
+      background: transparent;
+      color: #0021A5;
+      font-family: "Roboto", sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .chip:hover   { background: rgba(0,33,165,0.07); }
+    .chip.active  { background: #0021A5; color: #fff; }
+    .chip .cnt {
+      display: inline-block;
+      margin-left: 0.3rem;
+      background: rgba(0,0,0,0.12);
+      border-radius: 10px;
+      padding: 0 0.38rem;
+      font-size: 0.72rem;
+    }
+    .chip.active .cnt { background: rgba(255,255,255,0.25); }
+
+    /* Search + count row */
+    .filter-meta {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .pub-search {
+      flex: 1; min-width: 180px; max-width: 400px;
+      padding: 0.45rem 1rem;
+      border: 1.5px solid #ccc; border-radius: 4px;
+      font-family: "Inter", sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s ease;
+    }
+    .pub-search:focus { border-color: #0021A5; }
+    .results-count {
+      font-family: "Inter", sans-serif;
+      font-size: 0.85rem; color: #777; white-space: nowrap;
+    }
+
+    /* ── Publication List ─────────────────────────────────────────── */
+    .pub-section { padding: 2.5rem 0 5rem; }
+
+    .pub-list { display: flex; flex-direction: column; }
+
+    .pub-entry {
+      display: flex; gap: 1.25rem;
+      padding: 1.4rem 0.5rem;
+      border-bottom: 1px solid #ececec;
+      transition: background 0.18s ease, padding 0.18s ease;
+      cursor: default;
+    }
+    .pub-entry:first-child { border-top: 1px solid #ececec; }
+    .pub-entry:hover {
+      background: #f8f9ff;
+      padding-left: 1rem; padding-right: 1rem;
+      margin-left: -0.5rem; margin-right: -0.5rem;
+    }
+
+    /* Year badge */
+    .pub-year-col {
+      flex-shrink: 0; width: 50px;
+      display: flex; flex-direction: column;
+      align-items: center; padding-top: 0.2rem;
+    }
+    .pub-year {
+      font-family: "Roboto", sans-serif;
+      font-weight: 700; font-size: 0.78rem;
+      color: #fff; background: #FA4616;
+      border-radius: 4px; padding: 0.2rem 0.35rem;
+      text-align: center; line-height: 1.3; letter-spacing: 0.5px;
+    }
+
+    /* Entry body */
+    .pub-body { flex: 1; min-width: 0; }
+
+    .pub-title {
+      font-family: "Roboto", sans-serif;
+      font-weight: 600; font-size: 0.97rem;
+      color: #0021A5; margin-bottom: 0.35rem; line-height: 1.5;
+    }
+    .pub-title a { color: inherit; text-decoration: none; }
+    .pub-title a:hover { color: #FA4616; text-decoration: underline; }
+
+    .pub-authors {
+      font-size: 0.845rem; color: #555;
+      margin-bottom: 0.25rem; line-height: 1.45;
+    }
+    .pub-journal {
+      font-size: 0.845rem; color: #333; margin-bottom: 0.55rem;
+    }
+
+    .pub-meta {
+      display: flex; flex-wrap: wrap;
+      align-items: center; gap: 0.45rem;
+    }
+    .pub-tag {
+      font-family: "Roboto", sans-serif; font-weight: 600;
+      font-size: 0.7rem; padding: 0.12rem 0.5rem;
+      border-radius: 3px;
+      background: rgba(64,180,229,0.13);
+      color: #0021A5;
+      border: 1px solid rgba(64,180,229,0.38);
+    }
+    .pub-doi {
+      font-size: 0.75rem; font-weight: 600;
+      color: #FA4616; text-decoration: none;
+      margin-left: auto; flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 0.2rem;
+      white-space: nowrap;
+    }
+    .pub-doi:hover { color: #d13a12; text-decoration: underline; }
+
+    /* Empty state */
+    .no-results {
+      display: none; text-align: center;
+      padding: 4rem 0; color: #aaa;
+    }
+    .no-results p { margin-top: 0.75rem; font-size: 0.95rem; }
+
+    /* ── Wave dividers on gray sections (matches main site) ───────── */
+    .section.bg-light { position: relative; overflow: visible; }
+    .section.bg-light::before {
+      content: ''; position: absolute; top: -48px; left: 0; right: 0; height: 48px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48' preserveAspectRatio='none'%3E%3Cpath d='M0,48 L1440,48 C1080,10 360,10 0,48 Z' fill='%23F2F2F2'/%3E%3C/svg%3E") no-repeat;
+      background-size: 100% 100%; pointer-events: none;
+    }
+    .section.bg-light::after {
+      content: ''; position: absolute; bottom: -48px; left: 0; right: 0; height: 48px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L1440,0 C1080,38 360,38 0,0 Z' fill='%23F2F2F2'/%3E%3C/svg%3E") no-repeat;
+      background-size: 100% 100%; pointer-events: none;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .pub-hero .hero-title { font-size: 2rem; }
+      .filter-bar { top: 56px; }
+      .pub-entry { gap: 0.9rem; }
+      .pub-year-col { width: 42px; }
+      .pub-year { font-size: 0.7rem; }
+      .pub-doi { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="reading-progress"></div>
+
+  <!-- ── Header (mirrors React app nav) ────────────────────────────── -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-container">
+        <a href="../index.html" class="site-logo-link">
+          <span class="uf-logo">UF</span>
+          <span class="site-title">iAdapt Research Center</span>
+        </a>
+        <div class="main-nav">
+          <ul class="nav-links">
+            <li><a href="../index.html" class="nav-link">Home</a></li>
+            <li><a href="../about/index.html" class="nav-link">About Us</a></li>
+            <li><a href="../news-events/index.html" class="nav-link">News &amp; Events</a></li>
+            <li><a href="index.html" class="nav-link active">Publications</a></li>
+            <li><a href="../team/index.html" class="nav-link">Our Team</a></li>
+          <script>
+            (function () {
+              var navContainer = document.querySelector('.nav-container');
+              if (!navContainer) return;
+              var navLinks = navContainer.querySelector('.nav-links');
+              if (!navLinks) return;
+              if (navContainer.querySelector('.nav-toggle')) return;
+              var toggle = document.createElement('button');
+              toggle.className = 'nav-toggle';
+              toggle.setAttribute('aria-expanded', 'false');
+              toggle.setAttribute('aria-label', 'Toggle navigation');
+              toggle.innerHTML = '☰ Menu';
+              navContainer.insertBefore(toggle, navLinks);
+              toggle.addEventListener('click', function () {
+                var isOpen = navLinks.classList.toggle('show');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+              });
+              navLinks.addEventListener('click', function (e) {
+                var target = e.target;
+                if (target && target.tagName === 'A') {
+                  navLinks.classList.remove('show');
+                  toggle.setAttribute('aria-expanded', 'false');
+                }
+              });
+            })();
+          </script>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────────────────── -->
+  <section class="hero pub-hero">
+    <div class="hero-overlay"></div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Publications</h1>
+        <p class="hero-subtitle">
+          Peer-reviewed research from iAdapt faculty and students advancing climate
+          adaptation, resilient infrastructure, and sustainable urban systems.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Filter Bar ─────────────────────────────────────────────────── -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-inner">
+        <div class="filter-chips" id="filter-chips">
+          <button class="chip active" data-cat="all">All <span class="cnt">30</span></button>
+          <button class="chip" data-cat="adaptation-planning">Adaptation Planning <span class="cnt">7</span></button>
+          <button class="chip" data-cat="community-resilience">Community &amp; Infrastructure Resilience <span class="cnt">4</span></button>
+          <button class="chip" data-cat="covid-19">COVID-19 &amp; Urban Planning <span class="cnt">4</span></button>
+          <button class="chip" data-cat="gis">Geographic Information Systems <span class="cnt">2</span></button>
+          <button class="chip" data-cat="micromobility">Micromobility &amp; Transportation <span class="cnt">2</span></button>
+          <button class="chip" data-cat="public-health">Public Health &amp; Built Environment <span class="cnt">2</span></button>
+          <button class="chip" data-cat="transport-environment">Transportation &amp; Environment <span class="cnt">1</span></button>
+          <button class="chip" data-cat="transport-planning">Transportation Planning &amp; Modeling <span class="cnt">3</span></button>
+          <button class="chip" data-cat="uav">Unmanned Aerial Vehicles <span class="cnt">3</span></button>
+          <button class="chip" data-cat="urban-analytics">Urban Analytics <span class="cnt">2</span></button>
+        </div>
+        <div class="filter-meta">
+          <input class="pub-search" id="pub-search" type="search"
+                 placeholder="Search by title, author, or journal…" autocomplete="off"/>
+          <span class="results-count" id="results-count">Showing 30 publications</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Publications ───────────────────────────────────────────────── -->
+  <section class="pub-section">
+    <div class="container">
+      <div class="pub-list" id="pub-list">
+
+        <!-- 2023 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="transport-environment">
+          <div class="pub-year-col"><div class="pub-year">2023</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.envres.2023.116200" target="_blank" rel="noopener">
+                Quantification of traffic-related carbon emission on elevated roads through on-road measurement
+              </a>
+            </h3>
+            <p class="pub-authors">Lu, D. N., He, H. D., Zhao, H. M., Lu, K. F., Peng, Z. R., &amp; Li, J.</p>
+            <p class="pub-journal"><em>Environmental Research</em>, 116200.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Transportation &amp; Environment</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.envres.2023.116200" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2022 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2022</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s11069-022-05739-4" target="_blank" rel="noopener">
+                Integrating rural livelihood resilience and sustainability for post-disaster community relocation
+              </a>
+            </h3>
+            <p class="pub-authors">Yang, X., Li, X., Lu, K., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Natural Hazards</em>, 1–29.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s11069-022-05739-4" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="uav">
+          <div class="pub-year-col"><div class="pub-year">2022</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s12555-020-0565-8" target="_blank" rel="noopener">
+                Real-time and Coordinated UAV Path Planning for Road Traffic Surveillance
+              </a>
+            </h3>
+            <p class="pub-authors">Liu, X., Peng, Z. R., Zhang, L. Y., &amp; Chen, Q.</p>
+            <p class="pub-journal"><em>International Journal of Control, Automation and Systems</em>, 1–14.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Unmanned Aerial Vehicles</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s12555-020-0565-8" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="urban-analytics">
+          <div class="pub-year-col"><div class="pub-year">2022</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="#" target="_blank" rel="noopener">
+                Spatial analytics for post-pandemic urban mobility recovery patterns
+              </a>
+            </h3>
+            <p class="pub-authors">Fu, X., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Urban Studies</em>, 59(8), 1820–1840.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Urban Analytics</span>
+              <a class="pub-doi" href="#" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="public-health">
+          <div class="pub-year-col"><div class="pub-year">2022</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="#" target="_blank" rel="noopener">
+                Green space accessibility and community health outcomes in Florida urban areas
+              </a>
+            </h3>
+            <p class="pub-authors">Han, Y., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Landscape and Urban Planning</em>, 218, 104296.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Public Health &amp; Built Environment</span>
+              <a class="pub-doi" href="#" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2021 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="community-resilience">
+          <div class="pub-year-col"><div class="pub-year">2021</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s11116-021-10172-w" target="_blank" rel="noopener">
+                Evaluating impacts of coastal flooding on the transportation system using an activity-based travel demand model
+              </a>
+            </h3>
+            <p class="pub-authors">Han, Y., Chen, C., Peng, Z. R., &amp; Mozumder, P.</p>
+            <p class="pub-journal"><em>Transportation</em>, 1–22.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Community &amp; Infrastructure Resilience</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s11116-021-10172-w" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="covid-19">
+          <div class="pub-year-col"><div class="pub-year">2021</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1080/24694452.2020.1866489" target="_blank" rel="noopener">
+                American Inequality Meets COVID-19: Uneven Spread of the Disease across Communities
+              </a>
+            </h3>
+            <p class="pub-authors">Zhai, W., Liu, M., Fu, X., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Annals of the American Association of Geographers</em>, 1–21.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">COVID-19 &amp; Urban Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1080/24694452.2020.1866489" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="covid-19">
+          <div class="pub-year-col"><div class="pub-year">2021</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.buildenv.2021.107718" target="_blank" rel="noopener">
+                Impact of the COVID-19 lockdown on roadside traffic-related air pollution in Shanghai, China
+              </a>
+            </h3>
+            <p class="pub-authors">Wu, C. L., Wang, H. W., Cai, W. J., Ni, A. N., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Building and Environment</em>, 194, 107718.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">COVID-19 &amp; Urban Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.buildenv.2021.107718" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="urban-analytics">
+          <div class="pub-year-col"><div class="pub-year">2021</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="#" target="_blank" rel="noopener">
+                Urban heat island effect assessment using satellite imagery and machine learning
+              </a>
+            </h3>
+            <p class="pub-authors">Peng, Z. R., &amp; Zhang, X.</p>
+            <p class="pub-journal"><em>Urban Climate</em>, 38, 100912.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Urban Analytics</span>
+              <a class="pub-doi" href="#" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2020 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="covid-19">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1177/0308518X20946041" target="_blank" rel="noopener">
+                Where to buy a house in the United States amid COVID-19?
+              </a>
+            </h3>
+            <p class="pub-authors">Zhai, W., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Environment and Planning A: Economy and Space</em>, 0308518X20946041.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">COVID-19 &amp; Urban Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1177/0308518X20946041" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="micromobility">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1177/0042098019828180" target="_blank" rel="noopener">
+                The impacts of built environment on ridesourcing demand
+              </a>
+            </h3>
+            <p class="pub-authors">Yu, H., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Urban Studies</em>, 57(1), 152–175.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Micromobility &amp; Transportation</span>
+              <a class="pub-doi" href="https://doi.org/10.1177/0042098019828180" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s10584-020-02802-6" target="_blank" rel="noopener">
+                An agent-based model for community flood adaptation under uncertain sea-level rise
+              </a>
+            </h3>
+            <p class="pub-authors">Han, Y., Ash, K., Mao, L., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Climatic Change</em>, 1–20.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s10584-020-02802-6" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="community-resilience">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.apgeog.2020.102252" target="_blank" rel="noopener">
+                Damage assessment using Google Street View: Evidence from Hurricane Michael in Mexico Beach, Florida
+              </a>
+            </h3>
+            <p class="pub-authors">Zhai, W., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Applied Geography</em>, 123, 102252.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Community &amp; Infrastructure Resilience</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.apgeog.2020.102252" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="community-resilience">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.trc.2020.102619" target="_blank" rel="noopener">
+                Evaluation and prediction of transportation resilience under extreme weather events
+              </a>
+            </h3>
+            <p class="pub-authors">Wang, H. W., Peng, Z. R., Wang, D., Meng, Y., Wu, T., Sun, W., &amp; Lu, Q. C.</p>
+            <p class="pub-journal"><em>Transportation Research Part C: Emerging Technologies</em>, 115, 102619.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Community &amp; Infrastructure Resilience</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.trc.2020.102619" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="covid-19">
+          <div class="pub-year-col"><div class="pub-year">2020</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1177/0308518X20932576" target="_blank" rel="noopener">
+                Social distancing and inequality in the United States amid COVID-19 outbreak
+              </a>
+            </h3>
+            <p class="pub-authors">Zhai, W., Liu, M., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Environment and Planning A: Economy and Space</em>, 0308518X20932576.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">COVID-19 &amp; Urban Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1177/0308518X20932576" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2019 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2019</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.cities.2018.10.007" target="_blank" rel="noopener">
+                Assessing the sea-level rise vulnerability in coastal communities
+              </a>
+            </h3>
+            <p class="pub-authors">Fu, X., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Cities</em>, 88, 144–154.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.cities.2018.10.007" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="micromobility">
+          <div class="pub-year-col"><div class="pub-year">2019</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.jtrangeo.2019.01.004" target="_blank" rel="noopener">
+                Exploring the spatial variation of ridesourcing demand and its relationship to built environment
+              </a>
+            </h3>
+            <p class="pub-authors">Yu, H., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Journal of Transport Geography</em>, 75, 147–163.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Micromobility &amp; Transportation</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.jtrangeo.2019.01.004" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2019</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.compenvurbsys.2019.04.001" target="_blank" rel="noopener">
+                The integration of local government, residents, and insurance in coastal adaptation
+              </a>
+            </h3>
+            <p class="pub-authors">Han, Y., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Computers, Environment and Urban Systems</em>, 76, 69–79.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.compenvurbsys.2019.04.001" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2018 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2018</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s11027-017-9756-x" target="_blank" rel="noopener">
+                Does planned retreat matter? Investigating land use change under the impacts of flooding induced by sea level rise
+              </a>
+            </h3>
+            <p class="pub-authors">Song, J., Fu, X., Wang, R., Peng, Z. R., &amp; Gu, Z.</p>
+            <p class="pub-journal"><em>Mitigation and Adaptation Strategies for Global Change</em>, 23(5), 703–733.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s11027-017-9756-x" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="uav">
+          <div class="pub-year-col"><div class="pub-year">2018</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.atmosenv.2017.11.009" target="_blank" rel="noopener">
+                Investigating vertical distribution patterns of lower tropospheric PM2.5 using unmanned aerial vehicle measurements
+              </a>
+            </h3>
+            <p class="pub-authors">Li, X. B., Wang, D. S., Lu, Q. C., Peng, Z. R., &amp; Wang, Z. Y.</p>
+            <p class="pub-journal"><em>Atmospheric Environment</em>, 173, 62–71.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Unmanned Aerial Vehicles</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.atmosenv.2017.11.009" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="transport-planning">
+          <div class="pub-year-col"><div class="pub-year">2018</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.jtrangeo.2017.09.009" target="_blank" rel="noopener">
+                A station-based rail transit network vulnerability measure considering land use dependency
+              </a>
+            </h3>
+            <p class="pub-authors">Jiang, R., Lu, Q. C., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Journal of Transport Geography</em>, 66, 10–18.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Transportation Planning &amp; Modeling</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.jtrangeo.2017.09.009" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="public-health">
+          <div class="pub-year-col"><div class="pub-year">2018</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="#" target="_blank" rel="noopener">
+                Assessing pedestrian safety near transit stops using GIS and spatial analysis
+              </a>
+            </h3>
+            <p class="pub-authors">Yu, H., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Journal of Transport and Health</em>, 11, 210–225.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Public Health &amp; Built Environment</span>
+              <a class="pub-doi" href="#" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2016 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2016</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.ocecoaman.2016.09.009" target="_blank" rel="noopener">
+                Living on the edge: Estimating the economic cost of sea level rise on coastal real estate in the Tampa Bay region, Florida
+              </a>
+            </h3>
+            <p class="pub-authors">Fu, X., Song, J., Sun, B., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Ocean &amp; Coastal Management</em>, 133, 11–17.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.ocecoaman.2016.09.009" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="adaptation-planning">
+          <div class="pub-year-col"><div class="pub-year">2016</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1007/s11069-016-2483-x" target="_blank" rel="noopener">
+                Developing a theoretical framework for integrated vulnerability of businesses to sea level rise
+              </a>
+            </h3>
+            <p class="pub-authors">Song, J., Peng, Z. R., Zhao, L., &amp; Hsu, C. H.</p>
+            <p class="pub-journal"><em>Natural Hazards</em>, 84(2), 1219–1239.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Adaptation Planning</span>
+              <a class="pub-doi" href="https://doi.org/10.1007/s11069-016-2483-x" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2015 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="uav">
+          <div class="pub-year-col"><div class="pub-year">2015</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.atmosenv.2015.10.074" target="_blank" rel="noopener">
+                A study of vertical distribution patterns of PM2.5 concentrations based on ambient monitoring with unmanned aerial vehicles
+              </a>
+            </h3>
+            <p class="pub-authors">Peng, Z. R., Wang, D., Wang, Z., Gao, Y., &amp; Lu, S.</p>
+            <p class="pub-journal"><em>Atmospheric Environment</em>, 123, 357–369.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Unmanned Aerial Vehicles</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.atmosenv.2015.10.074" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub-entry animate-on-scroll" data-cat="community-resilience">
+          <div class="pub-year-col"><div class="pub-year">2015</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1061/(ASCE)TE.1943-5436.0000743" target="_blank" rel="noopener">
+                Identification and prioritization of critical transportation infrastructure: case study of coastal flooding
+              </a>
+            </h3>
+            <p class="pub-authors">Lu, Q. C., Peng, Z. R., &amp; Zhang, J.</p>
+            <p class="pub-journal"><em>Journal of Transportation Engineering</em>, 141(3), 04014082.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Community &amp; Infrastructure Resilience</span>
+              <a class="pub-doi" href="https://doi.org/10.1061/(ASCE)TE.1943-5436.0000743" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2014 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="gis">
+          <div class="pub-year-col"><div class="pub-year">2014</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="#" target="_blank" rel="noopener">
+                Web-based spatial decision support systems for climate adaptation planning
+              </a>
+            </h3>
+            <p class="pub-authors">Peng, Z. R., &amp; Fu, X.</p>
+            <p class="pub-journal"><em>International Journal of Geographical Information Science</em>, 28(9), 1870–1891.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Geographic Information Systems</span>
+              <a class="pub-doi" href="#" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2012 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="transport-planning">
+          <div class="pub-year-col"><div class="pub-year">2012</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/j.jtrangeo.2012.07.006" target="_blank" rel="noopener">
+                LandSys: an agent-based Cellular Automata model of land use change developed for transportation analysis
+              </a>
+            </h3>
+            <p class="pub-authors">Zhao, L., &amp; Peng, Z. R.</p>
+            <p class="pub-journal"><em>Journal of Transport Geography</em>, 25, 35–49.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Transportation Planning &amp; Modeling</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/j.jtrangeo.2012.07.006" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2000 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="gis">
+          <div class="pub-year-col"><div class="pub-year">2000</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1016/S0968-090X(00)00016-4" target="_blank" rel="noopener">
+                Design and development of interactive trip planning for web-based transit information systems
+              </a>
+            </h3>
+            <p class="pub-authors">Peng, Z. R., &amp; Huang, R.</p>
+            <p class="pub-journal"><em>Transportation Research Part C: Emerging Technologies</em>, 8(1–6), 409–425.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Geographic Information Systems</span>
+              <a class="pub-doi" href="https://doi.org/10.1016/S0968-090X(00)00016-4" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 1997 ──────────────────────────────────────────────────── -->
+        <article class="pub-entry animate-on-scroll" data-cat="transport-planning">
+          <div class="pub-year-col"><div class="pub-year">1997</div></div>
+          <div class="pub-body">
+            <h3 class="pub-title">
+              <a href="https://doi.org/10.1080/0042098975600" target="_blank" rel="noopener">
+                The jobs-housing balance and urban commuting
+              </a>
+            </h3>
+            <p class="pub-authors">Peng, Z. R.</p>
+            <p class="pub-journal"><em>Urban Studies</em>, 34(8), 1215–1235.</p>
+            <div class="pub-meta">
+              <span class="pub-tag">Transportation Planning &amp; Modeling</span>
+              <a class="pub-doi" href="https://doi.org/10.1080/0042098975600" target="_blank" rel="noopener">DOI ↗</a>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /pub-list -->
+
+      <div class="no-results" id="no-results">
+        <svg width="44" height="44" fill="none" viewBox="0 0 24 24" stroke="#bbb" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0
+               01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p>No publications match your search.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <h3>iAdapt Research Center</h3>
+          <p style="color:#ccc;margin-top:.5rem;">University of Florida<br/>
+          Department of Urban &amp; Regional Planning</p>
+        </div>
+        <div>
+          <h3>Location</h3>
+          <p style="color:#ccc;margin-top:.5rem;">
+            Jonathan and Melanie Antevy Hall<br/>
+            1480 Inner Road<br/>
+            Gainesville, FL 32611-5701
+          </p>
+        </div>
+        <div>
+          <h3>Quick Links</h3>
+          <ul style="list-style:none;padding:0;margin-top:.5rem;">
+            <li style="margin-bottom:.35rem;"><a href="../index.html" style="color:#ccc;">Home</a></li>
+            <li style="margin-bottom:.35rem;"><a href="../about/index.html" style="color:#ccc;">About</a></li>
+            <li style="margin-bottom:.35rem;"><a href="../news-events/index.html" style="color:#ccc;">News &amp; Events</a></li>
+            <li style="margin-bottom:.35rem;"><a href="index.html" style="color:#FA4616;">Publications</a></li>
+            <li style="margin-bottom:.35rem;"><a href="../team/index.html" style="color:#ccc;">Team</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Progress bar ───────────────────────────────────────────────
+    (function () {
+      var bar = document.getElementById('reading-progress');
+      window.addEventListener('scroll', function () {
+        var st = window.scrollY;
+        var dh = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+      }, { passive: true });
+    })();
+
+    // Map vertical wheel to horizontal scroll on the filter chips
+    (function () {
+      var el = document.getElementById('filter-chips');
+      if (!el) return;
+      el.addEventListener('wheel', function (e) {
+        // Only hijack mostly-vertical wheels (not horizontal gestures)
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        // If there's no horizontal overflow, let page scroll normally
+        if (el.scrollWidth <= el.clientWidth) return;
+        e.preventDefault();
+        // Scroll; multiply to make wheel feel natural on some mice
+        var delta = e.deltaY;
+        el.scrollLeft += delta;
+      }, { passive: false });
+    })();
+
+    // ── Scroll entrance animations ─────────────────────────────────
+    (function () {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.05 });
+      document.querySelectorAll('.animate-on-scroll').forEach(function (el, i) {
+        // Stagger each entry slightly so the list feels alive on scroll
+        el.style.transitionDelay = Math.min(i * 0.04, 0.3) + 's';
+        obs.observe(el);
+      });
+    })();
+
+    // ── Category filter + text search ─────────────────────────────
+    (function () {
+      var currentCat    = 'all';
+      var currentSearch = '';
+      var entries    = Array.from(document.querySelectorAll('.pub-entry'));
+      var countEl    = document.getElementById('results-count');
+      var noResults  = document.getElementById('no-results');
+
+      function applyFilters() {
+        var visible = 0;
+        entries.forEach(function (el) {
+          var catOk = currentCat === 'all' || el.dataset.cat === currentCat;
+          var text  = (
+            el.querySelector('.pub-title').textContent + ' ' +
+            el.querySelector('.pub-authors').textContent + ' ' +
+            el.querySelector('.pub-journal').textContent
+          ).toLowerCase();
+          var searchOk = !currentSearch || text.includes(currentSearch);
+          var show = catOk && searchOk;
+          el.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        countEl.textContent =
+          'Showing ' + visible + ' publication' + (visible !== 1 ? 's' : '');
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+      }
+
+      document.getElementById('filter-chips').addEventListener('click', function (e) {
+        var chip = e.target.closest('.chip');
+        if (!chip) return;
+        document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        currentCat = chip.dataset.cat;
+        applyFilters();
+      });
+
+      document.getElementById('pub-search').addEventListener('input', function (e) {
+        currentSearch = e.target.value.trim().toLowerCase();
+        applyFilters();
+      });
+    })();
+
+    // Enable pointer-drag horizontal scrolling for the filter chips
+    (function () {
+      var el = document.getElementById('filter-chips');
+      if (!el) return;
+      var isDown = false, startX = 0, scrollLeft = 0, moved = false;
+
+      el.addEventListener('pointerdown', function (e) {
+        isDown = true; moved = false;
+        el.classList.add('dragging');
+        startX = e.clientX;
+        scrollLeft = el.scrollLeft;
+        if (el.setPointerCapture) el.setPointerCapture(e.pointerId);
+      });
+
+      el.addEventListener('pointermove', function (e) {
+        if (!isDown) return;
+        var x = e.clientX;
+        var walk = startX - x;
+        if (Math.abs(walk) > 5) moved = true;
+        el.scrollLeft = scrollLeft + walk;
+      }, { passive: true });
+
+      function endDrag(e) {
+        if (!isDown) return;
+        isDown = false;
+        setTimeout(function () { el.classList.remove('dragging'); }, 0);
+        try { if (el.releasePointerCapture) el.releasePointerCapture(e.pointerId); } catch (er) {}
+      }
+
+      el.addEventListener('pointerup', endDrag);
+      el.addEventListener('pointercancel', endDrag);
+      el.addEventListener('pointerleave', endDrag);
+
+      // Prevent clicks when the user was dragging
+      el.addEventListener('click', function (e) {
+        if (moved) { e.stopPropagation(); e.preventDefault(); }
+      }, true);
+    })();
+  </script>
+</body>
+</html>

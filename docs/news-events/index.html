@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>News & Events — iAdapt Research Center</title>
+  <link rel="stylesheet" href="../assets/index-B9gkzxjt.css" />
+  <style>
+    /* Layout: center the feed and create breathing room below the hero */
+    .linked-feed { padding: 3rem 0; }
+    .linked-feed > div { max-width: 980px; margin: 0 auto; padding-left: 2rem; }
+
+    /* Headings and paragraphs spacing */
+    .linked-feed h2 { margin-top: 0; margin-bottom: 0.5rem; color: #093662; }
+    .linked-feed p { margin-top: 0; margin-bottom: 1rem; line-height: 1.6; }
+
+    /* Cards */
+    .linkedin-card { border: 1px solid #e6e6e6; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; background:#fff; }
+    .linkedin-card h4 { margin: 0 0 .35rem 0; font-size: 1.05rem; }
+    .linkedin-card p { margin: 0 0 .5rem 0; }
+    .linkedin-meta { font-size: .85rem; color: #666; margin-bottom: .5rem; }
+    .linkedin-empty { color: #999; padding: 2rem 0; text-align: center; }
+    .linkedin-actions { margin-top: 1rem; }
+    .btn { display: inline-block; background:#0021A5; color:#fff; padding:.5rem .75rem; border-radius:4px; text-decoration:none; }
+
+    /* Responsive: keep hero spacing consistent on small screens */
+    @media (max-width: 768px) {
+      .linked-feed { padding: 2rem 0; }
+      .linkedin-card { padding: 1rem; }
+    }
+  </style>
+  <style>
+    /* Ensure News & Events hero title/subtitle are white */
+    section[style*="news-hero.jpg"] h1,
+    section[style*="news-hero.jpg"] p {
+      color: #ffffff !important;
+    }
+    /* If using image.png as hero, make the hero title and subtitle white for contrast */
+    section[style*="image.png"] h1,
+    section[style*="image.png"] p { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-container">
+        <a href="../index.html" class="site-logo-link">
+          <span class="uf-logo">UF</span>
+          <span class="site-title">iAdapt Research Center</span>
+        </a>
+        <div class="main-nav">
+          <ul class="nav-links">
+            <li><a href="../index.html" class="nav-link">Home</a></li>
+            <li><a href="../about/index.html" class="nav-link">About Us</a></li>
+            <li><a href="index.html" class="nav-link active">News &amp; Events</a></li>
+            <li><a href="../publications/index.html" class="nav-link">Publications</a></li>
+            <li><a href="../team/index.html" class="nav-link">Our Team</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background:linear-gradient(90deg, rgba(0,33,165,0.95) 0%, rgba(0,33,165,0.8) 20%, rgba(0,33,165,0.45) 50%, rgba(0,33,165,0) 100%), url('../image.png') center/cover no-repeat; color:white; padding:5rem 0;">
+    <div class="container" style="max-width:900px;">
+      <h1 style="font-size:clamp(2.5rem, 5vw, 4.5rem);margin:0;">News &amp; Events</h1>
+      <p style="font-size:1.25rem;line-height:1.7;max-width:780px;margin:1rem 0 0;opacity:.95;">Recent news and events from the iAdapt community and our partners.</p>
+    </div>
+  </section>
+
+  <main class="container linked-feed">
+    <div id="posts-root">
+      <h2>News & Events</h2>
+      <p class="lead">Latest research updates, news, and events from iAdapt.</p>
+
+      <div id="posts-list">Loading posts…</div>
+        <div class="linkedin-cta" style="margin-top:1.25rem;text-align:center;">
+          <a class="btn btn-primary" href="https://www.linkedin.com/company/ufplanning/" target="_blank" rel="noopener">Follow UF Urban &amp; Regional Planning on LinkedIn</a>
+        </div>
+      </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <h3>iAdapt Research Center</h3>
+          <p style="color:#ccc;margin-top:.5rem;">University of Florida<br/>Department of Urban &amp; Regional Planning</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Load local JSON feed (data/linkedin.json) and render posts
+    (function () {
+      var feedEl = document.getElementById('linkedin-feed');
+      function render(posts) {
+        feedEl.innerHTML = '';
+        if (!posts || posts.length === 0) {
+          feedEl.innerHTML = '<div class="linkedin-empty">No recent posts available.</div>';
+          return;
+        }
+        posts.forEach(function (p) {
+          var d = document.createElement('div'); d.className = 'linkedin-card';
+          var title = document.createElement('h4'); title.textContent = p.title || p.text || 'LinkedIn post';
+          var meta = document.createElement('div'); meta.className = 'linkedin-meta'; meta.textContent = p.date || '';
+          var body = document.createElement('div'); body.innerHTML = p.html || (p.text ? '<p>'+p.text+'</p>' : '');
+          var link = document.createElement('a'); link.href = p.link || 'https://www.linkedin.com/company/ufplanning/'; link.target='_blank'; link.rel='noopener'; link.textContent = 'View on LinkedIn';
+          d.appendChild(title); d.appendChild(meta); d.appendChild(body); d.appendChild(link);
+          feedEl.appendChild(d);
+        });
+      }
+
+      fetch('../data/linkedin.json').then(function (r) {
+        if (!r.ok) throw new Error('no feed');
+        return r.json();
+      }).then(function (json) {
+        render(json.posts || json);
+      }).catch(function () {
+        feedEl.innerHTML = '<div class="linkedin-empty">Unable to load automated feed. You can add `data/linkedin.json` with recent posts, or run the provided fetch script to populate it.</div>';
+      });
+    })();
+  </script>
+  <script>
+    // Render posts from data/posts.json (falls back to linkedin.json if posts not available)
+    (function () {
+      var root = document.getElementById('posts-list');
+      function renderPosts(posts) {
+        if (!posts || posts.length === 0) {
+          root.innerHTML = '<div class="linkedin-empty">No posts available.</div>';
+          return;
+        }
+        var html = '';
+        posts.forEach(function (p) {
+          html += '<article class="post-card">';
+          if (p.image) html += '<div class="post-image" style="background-image:url('+p.image+');"></div>';
+          html += '<div class="post-body">';
+          html += '<h3 class="post-title"><a href="'+p.link+'">'+p.title+'</a></h3>';
+          html += '<div class="post-meta">'+(p.date||'')+'</div>';
+          html += '<p class="post-excerpt">'+(p.excerpt||'')+'</p>';
+          html += '<p><a class="btn" href="'+p.link+'">Read more</a></p>';
+          html += '</div></article>';
+        });
+        root.innerHTML = html;
+      }
+
+      fetch('../data/posts.json').then(function (r) {
+        if (!r.ok) throw new Error('no posts');
+        return r.json();
+      }).then(function (json) {
+        renderPosts(json.posts || json);
+      }).catch(function () {
+        // fallback to previous linkedin feed
+        fetch('../data/linkedin.json').then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
+          renderPosts((j.posts || j).map(function (p) { return { title: p.title||p.text, date: p.date, excerpt: (p.text||'').slice(0,200), link: p.link }; }));
+        }).catch(function () {
+          root.innerHTML = '<div class="linkedin-empty">Unable to load posts. You can add `data/posts.json` or run `npm run build:data` to fetch LinkedIn posts.</div>';
+        });
+      });
+    })();
+  </script>
+  <style>
+    /* Post cards */
+    .post-card{display:flex;gap:1rem;background:#fff;border:1px solid #e6e6e6;border-radius:8px;padding:1rem;margin-bottom:1rem}
+    .post-image{width:180px;height:110px;background-size:cover;background-position:center;border-radius:6px;flex-shrink:0}
+    .post-body{flex:1}
+    .post-title{margin:0 0 .35rem 0;font-size:1.15rem}
+    .post-title a{color:#0021A5;text-decoration:none}
+    .post-meta{font-size:0.85rem;color:#666;margin-bottom:.5rem}
+    .post-excerpt{margin:0 0 .5rem 0;color:#333}
+    @media (max-width:600px){.post-card{flex-direction:column}.post-image{width:100%;height:180px}}
+  </style>
+  <script>
+    (function () {
+      var navContainer = document.querySelector('.nav-container');
+      if (!navContainer) return;
+      var navLinks = navContainer.querySelector('.nav-links');
+      if (!navLinks) return;
+      if (navContainer.querySelector('.nav-toggle')) return;
+      var toggle = document.createElement('button');
+      toggle.className = 'nav-toggle';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Toggle navigation');
+      toggle.innerHTML = '☰ Menu';
+      navContainer.insertBefore(toggle, navLinks);
+      toggle.addEventListener('click', function () {
+        var isOpen = navLinks.classList.toggle('show');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      navLinks.addEventListener('click', function (e) {
+        var target = e.target;
+        if (target && target.tagName === 'A') {
+          navLinks.classList.remove('show');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

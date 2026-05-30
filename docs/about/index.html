@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — iAdapt Research Center</title>
+  <link rel="stylesheet" href="../assets/index-B9gkzxjt.css" />
+  <style>
+    /* Ensure hero title/subtitle are white for consistent contrast */
+    section[style*="about-banner.jpg"] h1,
+    section[style*="about-banner.jpg"] p {
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-container">
+        <a href="../index.html" class="site-logo-link"><span class="uf-logo">UF</span><span class="site-title">iAdapt Research Center</span></a>
+        <div class="main-nav">
+          <ul class="nav-links">
+            <li><a href="../index.html" class="nav-link">Home</a></li>
+            <li><a href="index.html" class="nav-link active">About Us</a></li>
+            <li><a href="../news-events/index.html" class="nav-link">News &amp; Events</a></li>
+            <li><a href="../publications/index.html" class="nav-link">Publications</a></li>
+            <li><a href="../team/index.html" class="nav-link">Our Team</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section style="background:linear-gradient(90deg, rgba(0,33,165,0.95) 0%, rgba(0,33,165,0.8) 20%, rgba(0,33,165,0.45) 50%, rgba(0,33,165,0) 100%), url('../about-banner.jpg') center/cover no-repeat; color:white; padding:5rem 0;">
+      <div class="container" style="max-width:900px;">
+        <h1 style="font-size:clamp(2.5rem, 5vw, 4.5rem);margin:0;">About Us</h1>
+        <p style="font-size:1.25rem;line-height:1.7;max-width:780px;margin:1rem 0 0;opacity:.95;">Leading adaptation and resilient planning and design in response to climate change and sea level rise.</p>
+      </div>
+    </section>
+
+    <section style="padding:4rem 0;">
+      <div class="container" style="max-width:900px;">
+        <h2 style="color:#093662;margin-top:0;">Our Vision &amp; Mission</h2>
+        <div style="display:grid;gap:2rem;margin-top:2rem;">
+          <div>
+            <h3 style="color:#0b5cab;margin-bottom:1rem;">Our Vision</h3>
+            <p style="font-size:1.15rem;line-height:1.8;margin:0;">To become the preeminent research and education center for adaptation and resilient planning and design in response to climate change and sea level rise.</p>
+          </div>
+          <div>
+            <h3 style="color:#0b5cab;margin-bottom:1rem;">Our Mission</h3>
+            <p style="font-size:1.05rem;line-height:1.8;margin:0 0 1rem;">To study the impacts of natural hazards and develop adaptive strategies in response to climate change and other natural hazards from the empirical and theoretical perspectives.</p>
+            <p style="font-size:1.05rem;line-height:1.8;margin:0;">To provide guidance to coastal communities to take proactive adaptation actions to increase their resiliency.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="padding-bottom:4rem;">
+      <div class="container" style="max-width:900px;">
+      <h2 style="color:#093662;">Contact Information</h2>
+      <p>Get in touch with the International Center For Adaptation Planning and Design.</p>
+      <div style="display:grid;gap:1rem;margin-top:1.5rem;">
+        <div style="background:#fff;border:1px solid #e3e8ef;border-radius:16px;padding:1.25rem 1.5rem;">
+          <h3 style="margin-top:0;margin-bottom:0.75rem;">Dr. Zhong-Ren Peng</h3>
+          <p><strong>Department:</strong> Urban and Regional Planning</p>
+          <p><strong>Institution:</strong> University of Florida College of Design, Construction and Planning</p>
+          <p><strong>Address:</strong> Jonathan and Melanie Antevy Hall, 1480 Inner Road, Gainesville, FL 32611-5701</p>
+          <p><strong>Phone:</strong> (352) 294-1491</p>
+          <p><strong>Fax:</strong> (352) 392-3308</p>
+          <p><strong>Email:</strong> <a href="mailto:zpeng@ufl.edu">zpeng@ufl.edu</a></p>
+        </div>
+        <!-- Helpful Links removed as requested -->
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <h3>iAdapt Research Center</h3>
+          <p style="color:#ccc;margin-top:.5rem;">University of Florida<br/>Department of Urban &amp; Regional Planning</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    (function () {
+      var navContainer = document.querySelector('.nav-container');
+      if (!navContainer) return;
+      var navLinks = navContainer.querySelector('.nav-links');
+      if (!navLinks) return;
+      if (navContainer.querySelector('.nav-toggle')) return;
+      var toggle = document.createElement('button');
+      toggle.className = 'nav-toggle';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Toggle navigation');
+      toggle.innerHTML = '☰ Menu';
+      navContainer.insertBefore(toggle, navLinks);
+      toggle.addEventListener('click', function () {
+        var isOpen = navLinks.classList.toggle('show');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      navLinks.addEventListener('click', function (e) {
+        var target = e.target;
+        if (target && target.tagName === 'A') {
+          navLinks.classList.remove('show');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

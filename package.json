@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "start:auto": "node server.js",
+    "build:pages": "node scripts/prepare-pages.js",
+    "deploy": "npm run build:pages",
     "fetch:linkedin": "python scripts/fetch_linkedin.py",
     "build:data": "npm run fetch:linkedin"
   },
